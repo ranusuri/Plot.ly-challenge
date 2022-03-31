@@ -1,13 +1,5 @@
 
-// append ids to the dropdown   
-d3.json('../data/samples.json').then((data)=>{
-    var id=data.names;
-    console.log(data.metadata);
-    var select=d3.selectAll('#selDataset');
-    Object.entries(id).forEach(([i,v])=>{
-        select.append('option').text(v);
-    })
-})
+
 
 function makePlot(selectedID){
 
@@ -17,6 +9,35 @@ function makePlot(selectedID){
     //Use `otu_labels` as the hovertext for the chart.
 
     d3.json('../data/samples.json').then((data)=>{
+
+
+        // Clears dropdown
+        d3.select("#selDataset").html("");   
+    
+        // Select the metadata array and for each item append the item ID and adds ID to dropdown
+        data.metadata.forEach(item =>
+         {
+            // console.log(item.id);
+            d3.select ("#selDataset").append('option').attr('value', item.id).text(item.id);
+         });
+        // Selected value is passed
+        d3.select("#selDataset").node().value = selectedID;
+    
+        // Filter Metadata for selected ID from dropdown
+        const idMetadata = data.metadata.filter(item=> (item.id == selectedID));
+
+        // Check the metadata loaded for the selected ID
+        console.log(idMetadata);
+    
+        const panelDisplay = d3.select("#sample-metadata");
+        panelDisplay.html("");
+        Object.entries(idMetadata[0]).forEach(item=> 
+        {
+            // console.log(item);
+            panelDisplay.append("p").text(`${item[0]}: ${item[1]}`)
+        });
+ 
+
 
         //filter sample array data for selected id
         var sampledata = data.samples.filter(item => parseInt(item.id) == selectedID)
@@ -79,12 +100,24 @@ function makePlot(selectedID){
             },
         };
         Plotly.newPlot('bubble',[trace1],bubbleLayout);   
+/*
+        var meta=data.metadata;
 
- 
+        console.log(selectedID);
+        console.log(meta);
 
+        // display meta info
+        var metadata=d3.select('#sample-metadata');
+        metadata.html('');
+        Object.entries(meta[selectedID]).forEach(([k,v])=>{
+            metadata.append('p').text(`${k.toUpperCase()}:\n${v}`);
+        })
+*/
     }); 
     
 }
+
+
 
 function optionChanged(selectionID){
 
@@ -92,7 +125,15 @@ function optionChanged(selectionID){
     console.log(selectionID);
 
     // Select the input value from the form
-    makePlot(selectionID);
+   makePlot(selectionID);
 
 }
 
+function init() {
+
+      makePlot(940);
+
+  }
+
+// Initialize the dashboard
+init();
