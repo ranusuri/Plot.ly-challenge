@@ -1,6 +1,4 @@
 
-
-
 function makePlot(selectedID){
 
     //Create a horizontal bar chart with a dropdown menu to display the top 10 OTUs found in that individual.
@@ -100,19 +98,9 @@ function makePlot(selectedID){
             },
         };
         Plotly.newPlot('bubble',[trace1],bubbleLayout);   
-/*
-        var meta=data.metadata;
 
-        console.log(selectedID);
-        console.log(meta);
 
-        // display meta info
-        var metadata=d3.select('#sample-metadata');
-        metadata.html('');
-        Object.entries(meta[selectedID]).forEach(([k,v])=>{
-            metadata.append('p').text(`${k.toUpperCase()}:\n${v}`);
-        })
-*/
+        drawGaugePlot(selectedID);
     }); 
     
 }
